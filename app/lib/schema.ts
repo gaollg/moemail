@@ -42,6 +42,8 @@ export const accounts = sqliteTable(
 export const emails = sqliteTable("email", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   address: text("address").notNull().unique(),
+  remark: text("remark"),
+  formatData: text("formatData"),
   userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
   createdAt: integer("created_at", { mode: "timestamp_ms" })
     .notNull()
