@@ -8,11 +8,11 @@ export const runtime = "edge"
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const address = searchParams.get('address')
-    
-    if (!address) {
+    const email = searchParams.get('email')
+
+    if (!email) {
       return NextResponse.json(
-        { error: "需要提供邮箱地址 (address 参数)" },
+        { error: "需要提供邮箱地址 (email 参数)" },
         { status: 400 }
       )
     }
@@ -23,12 +23,13 @@ export async function GET(request: Request) {
       .select({
         id: emails.id,
         userId: emails.userId,
+        address: emails.address,
         userName: users.name,
         createdAt: emails.createdAt
       })
       .from(emails)
       .leftJoin(users, eq(emails.userId, users.id))
-      .where(eq(sql`LOWER(${emails.address})`, address.toLowerCase()))
+      .where(eq(sql`LOWER(${emails.address})`, email.toLowerCase()))
       .limit(1)
 
     if (result.length === 0) {
